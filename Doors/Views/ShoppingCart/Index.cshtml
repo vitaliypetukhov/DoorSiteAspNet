@@ -1,54 +1,14 @@
-﻿@model ShoppingCartViewModel
+﻿@model HomeViewModel
 
-<div class="row checkoutForm">
-    <h2>Ваша Корзина Покупок</h2>
-    <h4>Здесь находятся двери, которые ждут оплаты</h4>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Выбранное колличество</th>
-                <th>Дверь</th>
-                <th class="text-right">Цена</th>
-                <th class="text-right">Итого</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var line in Model.ShoppingCart.ShoppingCartItems)
-            {
-                <tr>
-                    <td class="text-center">@line.Ammount</td>
-                    <td class="text-left">@line.Door.Name</td>
-                    <td class="text-right">@line.Door.Price.ToString("c")</td>
-                    <td class="text-right">
-                        @((line.Ammount * line.Door.Price).ToString("c"))
-                    </td>
-                    <td class="text-center"><a class="glyphicon glyphicon-remove text-danger remove" asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart" asp-route-drinkId="@line.Door.DoorId"></a></td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3" class="text-right">Total:</td>
-                <td class="text-right">
-                    @Model.ShoppingCartTotal.ToString("c")
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+@await Html.PartialAsync("Carousel")
 
-    <div class="text-right">
-        <div class="btn-group ">
-            <a class="btn btn-success" asp-controller="Order" asp-action="Checkout">Checkout</a>
-            <a class="btn-group">
-                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Добавить больше дверей<span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a asp-controller="Door" asp-action="List" asp-route-category="InteriorDoors">Межкомнатные Двери</a></li>
-                    <li><a asp-controller="Door" asp-action="List" asp-route-category="InputDoors">Входные Двери</a></li>
-                </ul>
-            </a>
-        </div>
-    </div>
+<h2>Популярные двери за неделю</h2>
+<h4>Мы стараемся ради вас!!!</h4>
+
+<div class="row">
+    @foreach(var door in Model.PreferredDoors)
+    {
+        @Html.Partial("DoorsSummary",door)
+    }
+
 </div>
