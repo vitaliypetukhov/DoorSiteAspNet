@@ -1,0 +1,12 @@
+﻿<div>
+    <h2> All Doors Shown here !!!!</h2>
+</div>
+
+<h2>@Model.CurrentCategory</h2>
+
+@{ 
+    foreach(Door door in Model.Doors)
+    {
+        @Html.Partial("DoorsSummary", door)
+    }
+}
