@@ -10,6 +10,7 @@ using Doors.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,7 +56,19 @@ namespace Doors
             app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseSession();
-            app.UseMvcWithDefaultRoute();
+            //app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "categoryFilter", 
+                    template: "Door/{action}/{category?}", 
+                    defaults: new {Controller ="Door", action = "List" }
+                    );
+                routes.MapRoute(
+                    name: "default", 
+                    template: "{controller=Home}/{action-Index}/{id?}"
+                    );
+            });
 
             DbInitializer.Seed(app);
         }

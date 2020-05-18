@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Doors.Data.Interfaces;
+using Doors.Data.Models;
 using Doors.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,15 +20,39 @@ namespace Doors.Controllers
             _doorRepository = doorRepository;
         }
 
-        public ViewResult List()
+        public ViewResult List(string category)
         {
-            ViewBag.Name = "DotNet, How?";
-            
-            DoorListViewModel vm = new DoorListViewModel();
-            vm.Doors = _doorRepository.Doors;
-            vm.CurrentCategory = "DoorCategory";
+            string _category = category;
+            IEnumerable<Door> doors;
 
-            return View(vm);
+            string currentCategory = string.Empty;
+
+            if(string.IsNullOrEmpty(category))
+            {
+                doors = _doorRepository.Doors.OrderBy(n => n.DoorId);
+                currentCategory = "All Doors";
+            }
+            else
+            {
+                if(string.Equals("InteriorDoors",_category, StringComparison.OrdinalIgnoreCase))
+                {
+                    doors = _doorRepository.Doors.Where(p => p.Category.CategoryName.Equals("InteriorDoors")).OrderBy(p => p.Name);
+                }
+                else
+                {
+                    doors = _doorRepository.Doors.Where(p => p.Category.CategoryName.Equals("InputDoors")).OrderBy(p => p.Name);
+                }
+
+                currentCategory = _category;
+            }
+
+            var doorListViewModel = new DoorListViewModel
+            {
+                Doors = doors,
+                CurrentCategory = currentCategory
+            };
+
+            return View(doorListViewModel);
         }
     }
 }
